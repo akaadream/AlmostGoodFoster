@@ -84,6 +84,12 @@ namespace AlmostGoodFoster.Scenes
         public static bool AlreadyExists(string name) => Scenes.TryGetValue(name, out _);
 
         /// <summary>
+        /// Handle inputs inside the current loaded scene
+        /// </summary>
+        /// <param name="inputState"></param>
+        public static void HandleInputs(Input input) => CurrentScene?.HandleInputs(input);
+
+        /// <summary>
         /// Update the current loaded scene
         /// </summary>
         /// <param name="deltaTime">Time elapsed since the previous frame</param>

@@ -1,4 +1,5 @@
-﻿using AlmostGoodFoster.EC;
+﻿using AlmostGoodFoster.Components;
+using AlmostGoodFoster.EC;
 using Foster.Framework;
 
 namespace AlmostGoodFoster.Scenes
@@ -19,6 +20,11 @@ namespace AlmostGoodFoster.Scenes
         /// The list of entities contained in the scene
         /// </summary>
         public List<Entity> Entities { get; set; } = [];
+
+        /// <summary>
+        /// The main camera of the scene
+        /// </summary>
+        public Camera? MainCamera { get; private set; }
 
         /// <summary>
         /// Function called when the engine enter the scene
@@ -43,6 +49,12 @@ namespace AlmostGoodFoster.Scenes
                 }
 
                 entity.LoadContent();
+
+                var camera = entity.Find<Camera>();
+                if (camera != null)
+                {
+                    MainCamera = camera;
+                }
             }
 
             GC.Collect();
@@ -66,6 +78,23 @@ namespace AlmostGoodFoster.Scenes
 
             GC.Collect();
             IsLoaded = false;
+        }
+
+        /// <summary>
+        /// Handle entity's components inputs
+        /// </summary>
+        /// <param name="input"></param>
+        public void HandleInputs(Input input)
+        {
+            foreach (var entity in Entities)
+            {
+                if (entity is null || !entity.IsActive)
+                {
+                    continue;
+                }
+
+                entity.HandleInputs(input);
+            }
         }
 
         /// <summary>
@@ -133,8 +162,29 @@ namespace AlmostGoodFoster.Scenes
                     continue;
                 }
 
+                if (MainCamera != null)
+                {
+                    batcher.PushMatrix(MainCamera.View);
+                }
                 entity.Render(batcher, deltaTime);
+                if (MainCamera != null)
+                {
+                    batcher.PopMatrix();
+                }
+                entity.DrawGUI(batcher, deltaTime);
             }
+        }
+
+        public void AddEntity(Entity entity)
+        {
+            Entities.Add(entity);
+        }
+
+        public Entity CreateEntity()
+        {
+            var entity = new Entity(this);
+            AddEntity(entity);
+            return entity;
         }
     }
 }

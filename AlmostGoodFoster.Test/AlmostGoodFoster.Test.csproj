@@ -12,4 +12,13 @@
     <ProjectReference Include="..\AlmostGoodFoster\AlmostGoodFoster.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Assets\character.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Fonts\Signika-Bold.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

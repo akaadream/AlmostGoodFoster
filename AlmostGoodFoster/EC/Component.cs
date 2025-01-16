@@ -5,6 +5,11 @@ namespace AlmostGoodFoster.EC
     public abstract class Component()
     {
         /// <summary>
+        /// The GUID of the component
+        /// </summary>
+        public Guid Guid { get; private set; } = Guid.NewGuid();
+
+        /// <summary>
         /// The entity owning the component
         /// </summary>
         public Entity? Entity { get; internal set; }
@@ -55,6 +60,15 @@ namespace AlmostGoodFoster.EC
         }
 
         /// <summary>
+        /// Handle inputs
+        /// </summary>
+        /// <param name="input"></param>
+        public virtual void HandleInputs(Input input)
+        {
+
+        }
+
+        /// <summary>
         /// Update the component
         /// </summary>
         /// <param name="deltaTime"></param>
@@ -87,6 +101,26 @@ namespace AlmostGoodFoster.EC
         /// <param name="batcher"></param>
         /// <param name="deltaTime"></param>
         public virtual void Render(Batcher batcher, float deltaTime)
+        {
+            
+        }
+
+        /// <summary>
+        /// Lately render the component
+        /// </summary>
+        /// <param name="batcher"></param>
+        /// <param name="deltaTime"></param>
+        public virtual void LateRender(Batcher batcher, float deltaTime)
+        {
+
+        }
+
+        /// <summary>
+        /// Draw GUI
+        /// </summary>
+        /// <param name="batcher"></param>
+        /// <param name="deltaTime"></param>
+        public virtual void DrawGUI(Batcher batcher, float deltaTime)
         {
             
         }

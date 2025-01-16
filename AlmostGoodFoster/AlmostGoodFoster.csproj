@@ -10,8 +10,6 @@
 		<ProjectReference Include="..\..\Foster\Framework\Foster.Framework.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="Animations\" />
-	  <Folder Include="Graphics\" />
 	  <Folder Include="Tilemaps\" />
 	</ItemGroup>
 	<ItemGroup>

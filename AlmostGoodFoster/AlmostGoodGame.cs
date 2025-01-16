@@ -1,4 +1,5 @@
-﻿using AlmostGoodFoster.Scenes;
+﻿using AlmostGoodFoster.HotReload;
+using AlmostGoodFoster.Scenes;
 using Foster.Framework;
 
 namespace AlmostGoodFoster
@@ -28,8 +29,12 @@ namespace AlmostGoodFoster
             base(name, width, height)
         {
             // Instanciation
-            Batcher = new(Renderer);
-            Target = new(Renderer, width, height);
+            Batcher = new(GraphicsDevice);
+            Target = new(GraphicsDevice, width, height);
+
+
+            UpdateMode = UpdateMode.UnlockedStep();
+            GraphicsDevice.VSync = true;
         }
 
         /// <summary>
@@ -39,6 +44,10 @@ namespace AlmostGoodFoster
         {
             // Start everthing
             SceneManager.Startup();
+
+#if DEBUG
+            FileWatcher.Startup();
+#endif
         }
 
         /// <summary>
@@ -48,6 +57,10 @@ namespace AlmostGoodFoster
         {
             // Shutdown
             SceneManager.Shutdown();
+
+#if DEBUG
+            FileWatcher.Shutdown();
+#endif
         }
 
         /// <summary>
@@ -59,6 +72,8 @@ namespace AlmostGoodFoster
 
             FPSCalculation();
             UpdateFixedTime();
+
+            SceneManager.HandleInputs(Input);
 
             // Fixed update
             while (_accumulator >= _fixedDeltaTimeTarget)
@@ -107,12 +122,12 @@ namespace AlmostGoodFoster
         /// </summary>
         protected override void Render()
         {
-            Target.Clear(0x150e22);
+            Window.Clear(0x897897);
 
             // Render
             SceneManager.Render(Batcher, Time.Delta);
-
-            Batcher.Render(Target);
+            Batcher.Render(Window);
+            Batcher.Clear();
         }
     }
 }

@@ -1,9 +1,21 @@
-﻿using Foster.Framework;
+﻿using AlmostGoodFoster.Scenes;
+using Foster.Framework;
+using System.Numerics;
 
 namespace AlmostGoodFoster.EC
 {
-    public class Entity()
+    public class Entity(Scene scene)
     {
+        /// <summary>
+        /// The GUID of the entity
+        /// </summary>
+        public Guid Guid { get; private set; } = Guid.NewGuid();
+
+        /// <summary>
+        /// The transform of the entity
+        /// </summary>
+        public Transform Transform { get; set; }
+
         /// <summary>
         /// The list of components attached to this entity
         /// </summary>
@@ -23,6 +35,11 @@ namespace AlmostGoodFoster.EC
         /// True when the entity gets loaded
         /// </summary>
         private bool _isLoaded = false;
+
+        /// <summary>
+        /// The scene that contains this entity
+        /// </summary>
+        public Scene Scene { get; private set; } = scene;
 
         /// <summary>
         /// Load content of entity's components
@@ -51,17 +68,18 @@ namespace AlmostGoodFoster.EC
         /// </summary>
         /// <param name="component"></param>
         /// <returns></returns>
-        public bool Register(Component component)
+        public Entity Register(Component component)
         {
             if (component == null || Components.Contains(component))
             {
-                return false;
+                // TODO: throw an Exception
+                return this;
             }
 
             Components.Add(component);
             component.Entity = this;
             component.OnAdded();
-            return true;
+            return this;
         }
 
         /// <summary>
@@ -86,6 +104,27 @@ namespace AlmostGoodFoster.EC
             component.Entity = null;
             component.OnRemoved();
             return true;
+        }
+
+        /// <summary>
+        /// Handle inputs
+        /// </summary>
+        /// <param name="input"></param>
+        internal void HandleInputs(Input input)
+        {
+            foreach (var component in Components)
+            {
+                if (!_isLoaded)
+                {
+                    component?.Start();
+                }
+                component?.HandleInputs(input);
+            }
+
+            if (!_isLoaded)
+            {
+                _isLoaded = true;
+            }
         }
 
         /// <summary>
@@ -147,14 +186,47 @@ namespace AlmostGoodFoster.EC
         }
 
         /// <summary>
-        /// Find the first component corresponding with the given type
+        /// Lately render the entity's components
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public T? Find<T>() where T : Component
+        /// <param name="batcher"></param>
+        /// <param name="deltaTime"></param>
+        internal void LateRender(Batcher batcher, float deltaTime)
         {
             foreach (var component in Components)
             {
+                component?.Render(batcher, deltaTime);
+            }
+        }
+
+        /// <summary>
+        /// Draw the GUI of entity's components
+        /// </summary>
+        /// <param name="batcher"></param>
+        /// <param name="deltaTime"></param>
+        internal void DrawGUI(Batcher batcher, float deltaTime)
+        {
+            foreach (var component in Components)
+            {
+                component?.Render(batcher, deltaTime);
+            }
+        }
+
+        /// <summary>
+        /// Find the first component corresponding with the given type.
+        /// If an instance of T is given as a parameter, the function will find the first
+        /// component which is not the given instance
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T? Find<T>(T? instance = null) where T : Component
+        {
+            foreach (var component in Components)
+            {
+                if (instance != null && component == instance)
+                {
+                    continue;
+                }
+
                 if (component is T)
                 {
                     return component as T;
@@ -169,11 +241,16 @@ namespace AlmostGoodFoster.EC
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public List<T?> FindAll<T>() where T : Component
+        public List<T?> FindAll<T>(T? instance = null) where T : Component
         {
             List<T?> components = [];
             foreach (var component in Components)
             {
+                if (instance != null && component == instance)
+                {
+                    continue;
+                }
+
                 if (component is T)
                 {
                     components.Add(component as T);
@@ -195,5 +272,10 @@ namespace AlmostGoodFoster.EC
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public int Count<T>() where T : Component => FindAll<T>().Count;
+
+        public void SetPosition(Vector2 position)
+        {
+            Transform = new Transform(position, Transform.Scale, Transform.Rotation);
+        }
     }
 }
