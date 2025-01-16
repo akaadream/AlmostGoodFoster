@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>Library</OutputType>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<InvariantGlobalization>true</InvariantGlobalization>
+	</PropertyGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Foster\Framework\Foster.Framework.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Animations\" />
+	  <Folder Include="Graphics\" />
+	  <Folder Include="Tilemaps\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="System.Text.Json" Version="9.0.1" />
+	</ItemGroup>
+</Project>
