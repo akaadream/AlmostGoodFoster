@@ -21,11 +21,14 @@ namespace AlmostGoodFoster.Test
             Scene scene = new("Sample scene");
             Entity entity = scene.CreateEntity();
             Sprite sprite = new(GraphicsDevice, "character.png");
+            AnimatedSprite animatedSprite = new();
+            animatedSprite.Register("idle", SpritesheetAnimation.FromRange(sprite, 0.12f, 0, 0, 16, 19, 4));
             entity.
-                Register(new SpritesheetAnimation(sprite, new RectInt(0, 0, 16, 19), 4, 0.1f)).
+                Register(animatedSprite).
                 Register(new Player());
-            entity.Transform = new(new Vector2(100), new Vector2(4f), 0f);
-            scene.CreateEntity().Register(new Camera(new RectInt(0, 0, Window.Width, Window.Height)));
+            entity.Position = new Vector2(100);
+            entity.Scale = new Vector2(4f);
+            scene.CreateEntity().Register(new Camera(GraphicsDevice, new RectInt(0, 0, Window.Width, Window.Height)));
             scene.CreateEntity().Register(new SceneLogger(GraphicsDevice));
 
             SceneManager.AddScene(scene);

@@ -5,24 +5,37 @@ using System.Numerics;
 
 namespace AlmostGoodFoster.Components.Animations
 {
-    public class SpritesheetAnimation(Sprite sprite, RectInt cell, int frames, float speed) : Component
+    public class SpritesheetAnimation(Sprite sprite, float speed) : Component
     {
         /// <summary>
         /// The sprite associated with the animation
         /// </summary>
         public Sprite Sprite { get; set; } = sprite;
 
-        public RectInt Cell { get; set; } = cell;
+        /// <summary>
+        /// Frames
+        /// </summary>
+        public List<RectInt> Frames { get; set; } = [];
 
-        public int Frames { get; set; } = frames;
+        /// <summary>
+        /// The frame index
+        /// </summary>
+        public int FrameIndex { get; private set; } = 0;
 
-        public int FrameIndex { get; set; } = 0;
-
+        /// <summary>
+        /// The speed of the animation
+        /// </summary>
         public float Speed { get; set; } = speed;
 
+        /// <summary>
+        /// Loop the animation
+        /// </summary>
+        public bool IsLooping { get; set; } = true;
+
+        // Timer used for the animation
         private float timer = 0f;
 
-        public override void LateUpadte(float deltaTime)
+        public override void LateUpdate(float deltaTime)
         {
             timer += deltaTime;
             if (timer >= Speed)
@@ -35,21 +48,30 @@ namespace AlmostGoodFoster.Components.Animations
         private void NextFrame()
         {
             FrameIndex++;
-            if (FrameIndex > Frames - 1)
+            if (IsLooping && FrameIndex > Frames.Count - 1)
             {
                 FrameIndex = 0;
             }
         }
 
-        private RectInt CurrentFrame()
+        public static SpritesheetAnimation FromRange(Sprite sprite, float speed, int startX, int startY, int frameWidth, int frameHeight, int count)
         {
-            int textureWidth = Sprite.Texture.Width;
-            int textureHeight = Sprite.Texture.Height;
+            var animation = new SpritesheetAnimation(sprite, speed);
+            animation.RegisterFramesRange(startX, startY, frameWidth, frameHeight, count);
+            return animation;
+        }
 
-            int frameX = Cell.Width * FrameIndex + Cell.X;
-            int frameY = Cell.Height * FrameIndex + Cell.Y;
+        public void RegisterFrame(RectInt rect)
+        {
+            Frames.Add(rect);
+        }
 
-            return new(frameX, frameY, Cell.Width, Cell.Height);
+        public void RegisterFramesRange(int startX, int startY, int frameWidth, int frameHeight, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                RegisterFrame(new RectInt(startX + frameWidth * i, startY, frameWidth, frameHeight));
+            }
         }
 
         public override void Render(Batcher batcher, float deltaTime)
@@ -59,7 +81,13 @@ namespace AlmostGoodFoster.Components.Animations
                 Log.Error($"The component (GUID: {Guid}) is not attached to an entity");
                 return;
             }
-            batcher.Image(Sprite.Texture, CurrentFrame(), Entity.Transform.Position, Vector2.Zero, Entity.Transform.Scale * Sprite.Scale, 0f, Color.White);
+
+            Render(batcher, Entity.Position, Entity.Scale);
+        }
+
+        public void Render(Batcher batcher, Vector2 position, Vector2 scale)
+        {
+            batcher.Image(Sprite.Texture, Frames[FrameIndex], position, Vector2.Zero, scale * Sprite.Scale, 0f, Color.White);
         }
     }
 }

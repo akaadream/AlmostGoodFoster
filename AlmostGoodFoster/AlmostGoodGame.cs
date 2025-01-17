@@ -1,4 +1,5 @@
-﻿using AlmostGoodFoster.HotReload;
+﻿using System.Diagnostics;
+using AlmostGoodFoster.HotReload;
 using AlmostGoodFoster.Scenes;
 using Foster.Framework;
 
@@ -9,21 +10,7 @@ namespace AlmostGoodFoster
         public Batcher Batcher { get; private set; }
         public Target Target { get; private set; }
 
-        public int FPS { get; private set; }
-
-        #region Fixed time step parameters
-
-        private float _accumulator = 0f;
-        private float _previousTime = 0f;
-        private const float _maxFrameTime = 250f;
-        private const float _fixedDeltaTimeTarget = (int)(1000 / (float)60);
-        private float _fixedDeltaTime = 0f;
-
-        #endregion
-
-        private int _fpsCount;
-        private TimeSpan _elapsed;
-        private TimeSpan _last;
+        private FrameCounter _frameCounter;
 
         public AlmostGoodGame(string name = "Almost Good Game", int width = 1280, int height = 720):
             base(name, width, height)
@@ -32,8 +19,8 @@ namespace AlmostGoodFoster
             Batcher = new(GraphicsDevice);
             Target = new(GraphicsDevice, width, height);
 
+            _frameCounter = new FrameCounter();
 
-            UpdateMode = UpdateMode.UnlockedStep();
             GraphicsDevice.VSync = true;
         }
 
@@ -68,53 +55,12 @@ namespace AlmostGoodFoster
         /// </summary>
         protected override void Update()
         {
-            Window.Title = $"{Name} | FPS: {FPS} - {(GC.GetTotalMemory(false) / 1_048_576f).ToString("F")} MB";
-
-            FPSCalculation();
-            UpdateFixedTime();
+            _frameCounter.Update();
+            Window.Title = $"{Name} | FPS: {_frameCounter.FPS} - {(GC.GetTotalMemory(false) / 1_048_576f).ToString("F")} MB";
 
             SceneManager.HandleInputs(Input);
-
-            // Fixed update
-            while (_accumulator >= _fixedDeltaTimeTarget)
-            {
-                SceneManager.FixedUpdate(_fixedDeltaTime);
-                _accumulator -= _fixedDeltaTimeTarget;
-            }
-
             SceneManager.Update(Time.Delta);
             SceneManager.LateUpdate(Time.Delta);
-        }
-
-        /// <summary>
-        /// Compute the fixed time step
-        /// </summary>
-        private void UpdateFixedTime()
-        {
-            if (_previousTime == 0f)
-            {
-                _previousTime = Time.Delta;
-            }
-            float now = Time.Delta;
-            if (_fixedDeltaTime > _maxFrameTime)
-            {
-                _fixedDeltaTime = _maxFrameTime;
-            }
-            _previousTime = now;
-            _accumulator += _fixedDeltaTime;
-        }
-
-        private void FPSCalculation()
-        {
-            _fpsCount++;
-            _elapsed = Time.Elapsed;
-            if (_elapsed - _last >= TimeSpan.FromSeconds(1))
-            {
-                FPS = _fpsCount;
-                _fpsCount = 0;
-                _last = _elapsed;
-                _elapsed -= TimeSpan.FromSeconds(1);
-            }
         }
 
         /// <summary>
@@ -130,4 +76,24 @@ namespace AlmostGoodFoster
             Batcher.Clear();
         }
     }
+
+    public class FrameCounter
+    {
+        public int FPS = 0;
+        public int Frames = 0;
+        public Stopwatch sw = Stopwatch.StartNew();
+
+        public void Update()
+        {
+            Frames++;
+            var elapsed = sw.Elapsed.TotalSeconds;
+            if (elapsed > 1)
+            {
+                sw.Restart();
+                FPS = Frames;
+                Frames = 0;
+            }
+        }
+    }
+
 }

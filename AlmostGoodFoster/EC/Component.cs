@@ -90,7 +90,7 @@ namespace AlmostGoodFoster.EC
         /// Lately update the component
         /// </summary>
         /// <param name="deltaTime"></param>
-        public virtual void LateUpadte(float deltaTime)
+        public virtual void LateUpdate(float deltaTime)
         {
 
         }
