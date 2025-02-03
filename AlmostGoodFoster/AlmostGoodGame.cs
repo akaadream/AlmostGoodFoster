@@ -37,11 +37,18 @@ namespace AlmostGoodFoster
             GraphicsDevice.VSync = true;
         }
 
+        protected virtual void LoadContent()
+        {
+
+        }
+
         /// <summary>
         /// Startup the game and load the game's content
         /// </summary>
         protected override void Startup()
         {
+            LoadContent();
+
             // Start everthing
             SceneManager.Startup();
 

@@ -2,11 +2,11 @@
 
 namespace AlmostGoodFoster.Scenes
 {
-    public static class SceneManager
+    public class SceneManager()
     {
-        internal static Dictionary<string, Scene> Scenes { get; private set; } = [];
-        public static string CurrentSceneName { get; private set; } = "";
-        public static Scene? CurrentScene
+        internal Dictionary<string, Scene> Scenes { get; private set; } = [];
+        public string CurrentSceneName { get; private set; } = "";
+        public Scene? CurrentScene
         {
             get
             {
@@ -23,7 +23,7 @@ namespace AlmostGoodFoster.Scenes
         /// </summary>
         /// <param name="scene"></param>
         /// <returns></returns>
-        public static bool AddScene(Scene scene)
+        public bool AddScene(Scene scene)
         {
             if (scene == null || AlreadyExists(scene.Name))
             {
@@ -43,7 +43,7 @@ namespace AlmostGoodFoster.Scenes
         /// </summary>
         /// <param name="name">The name of the scene you want to load</param>
         /// <returns>True if a new scene is loaded</returns>
-        public static bool SetActive(string name)
+        public bool SetActive(string name)
         {
             if (!AlreadyExists(name) || CurrentSceneName == name)
             {
@@ -62,7 +62,7 @@ namespace AlmostGoodFoster.Scenes
         /// <summary>
         /// Start the running process of the scene manager
         /// </summary>
-        public static void Startup()
+        public void Startup()
         {
             CurrentScene?.LoadContent();
         }
@@ -70,7 +70,7 @@ namespace AlmostGoodFoster.Scenes
         /// <summary>
         /// Shutdown the running process of the scene manager
         /// </summary>
-        public static void Shutdown()
+        public void Shutdown()
         {
             CurrentScene?.UnloadContent();
             Scenes?.Clear();
@@ -81,37 +81,37 @@ namespace AlmostGoodFoster.Scenes
         /// </summary>
         /// <param name="name">The name of the researched scene</param>
         /// <returns>True if the scene with this name already exists or false if the scene doesn't exists</returns>
-        public static bool AlreadyExists(string name) => Scenes.TryGetValue(name, out _);
+        public bool AlreadyExists(string name) => Scenes.TryGetValue(name, out _);
 
         /// <summary>
         /// Handle inputs inside the current loaded scene
         /// </summary>
         /// <param name="inputState"></param>
-        public static void HandleInputs(Input input) => CurrentScene?.HandleInputs(input);
+        public void HandleInputs(Input input) => CurrentScene?.HandleInputs(input);
 
         /// <summary>
         /// Update the current loaded scene
         /// </summary>
         /// <param name="deltaTime">Time elapsed since the previous frame</param>
-        public static void Update(float deltaTime) => CurrentScene?.Update(deltaTime);
+        public void Update(float deltaTime) => CurrentScene?.Update(deltaTime);
 
         /// <summary>
         /// Update the current loaded scene with a fixed time step
         /// </summary>
         /// <param name="fixedDeltaTime">Time elapsed since the previous frame</param>
-        public static void FixedUpdate(float fixedDeltaTime) => CurrentScene?.FixedUpdate(fixedDeltaTime);
+        public void FixedUpdate(float fixedDeltaTime) => CurrentScene?.FixedUpdate(fixedDeltaTime);
 
         /// <summary>
         /// Lately update the current loaded scene
         /// </summary>
         /// <param name="deltaTime">Time elapsed since the previous frame</param>
-        public static void LateUpdate(float deltaTime) => CurrentScene?.LateUpdate(deltaTime);
+        public void LateUpdate(float deltaTime) => CurrentScene?.LateUpdate(deltaTime);
 
         /// <summary>
         /// Render the current loaded scene
         /// </summary>
         /// <param name="batcher">Batcher used to draw the scene's content</param>
         /// <param name="deltaTime">Time elapsed since the previous frame</param>
-        public static void Render(Batcher batcher, float deltaTime) => CurrentScene?.Render(batcher, deltaTime);
+        public void Render(Batcher batcher, float deltaTime) => CurrentScene?.Render(batcher, deltaTime);
     }
 }
