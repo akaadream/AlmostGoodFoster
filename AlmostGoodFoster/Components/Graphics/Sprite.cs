@@ -66,7 +66,7 @@ namespace AlmostGoodFoster.Components.Graphics
                 Log.Error($"The component (GUID: {Guid}) is not attached to an entity");
                 return;
             }
-            batcher.Image(Texture, Entity.Transform.Position, Vector2.Zero, Entity.Transform.Scale * Scale, 0f, Color.White);
+            batcher.Image(Texture, Entity.Position, Vector2.Zero, Entity.Scale * Scale, 0f, Color.White);
         }
     }
 }

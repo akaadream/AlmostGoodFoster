@@ -1,5 +1,4 @@
 ﻿using AlmostGoodFoster.EC;
-using AlmostGoodFoster.Extensions;
 using Foster.Framework;
 using System.Numerics;
 
@@ -7,7 +6,7 @@ namespace AlmostGoodFoster.Test.Components
 {
     public class Player : Component
     {
-        public float Speed = 7f;
+        public float Speed = 250f;
         public Vector2 Velocity;
 
         public Player()
@@ -48,12 +47,7 @@ namespace AlmostGoodFoster.Test.Components
             }
 
             Velocity = Velocity.Normalized();
-            Entity.Transform = new(Entity.Transform.Position.Add(Velocity * Speed), Entity.Transform.Scale, Entity.Transform.Rotation);
-        }
-
-        public override void FixedUpdate(float fixedDeltaTime)
-        {
-            base.FixedUpdate(fixedDeltaTime);
+            Entity.Position += Velocity * Speed * deltaTime;
         }
     }
 }

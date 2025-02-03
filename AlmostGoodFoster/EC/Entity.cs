@@ -12,9 +12,19 @@ namespace AlmostGoodFoster.EC
         public Guid Guid { get; private set; } = Guid.NewGuid();
 
         /// <summary>
-        /// The transform of the entity
+        /// The position of the entity
         /// </summary>
-        public Transform Transform { get; set; }
+        public Vector2 Position { get; set; }
+
+        /// <summary>
+        /// The scale of the entity
+        /// </summary>
+        public Vector2 Scale { get; set; }
+
+        /// <summary>
+        /// The rotation of the entity
+        /// </summary>
+        public float Rotation { get; set; }
 
         /// <summary>
         /// The list of components attached to this entity
@@ -168,7 +178,7 @@ namespace AlmostGoodFoster.EC
         {
             foreach (var component in Components)
             {
-                component?.LateUpadte(deltaTime);
+                component?.LateUpdate(deltaTime);
             }
         }
 
@@ -272,10 +282,5 @@ namespace AlmostGoodFoster.EC
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public int Count<T>() where T : Component => FindAll<T>().Count;
-
-        public void SetPosition(Vector2 position)
-        {
-            Transform = new Transform(position, Transform.Scale, Transform.Rotation);
-        }
     }
 }

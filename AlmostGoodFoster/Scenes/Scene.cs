@@ -1,4 +1,5 @@
-﻿using AlmostGoodFoster.Components;
+﻿using System.Numerics;
+using AlmostGoodFoster.Components;
 using AlmostGoodFoster.EC;
 using Foster.Framework;
 
@@ -164,7 +165,7 @@ namespace AlmostGoodFoster.Scenes
 
                 if (MainCamera != null)
                 {
-                    batcher.PushMatrix(MainCamera.View);
+                    batcher.PushMatrix(MainCamera.Position);
                 }
                 entity.Render(batcher, deltaTime);
                 if (MainCamera != null)
