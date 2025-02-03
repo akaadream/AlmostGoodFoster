@@ -4,7 +4,7 @@ using Foster.Framework;
 
 namespace AlmostGoodFoster.Scenes
 {
-    public sealed class Scene(string name)
+    public class Scene(string name)
     {
         /// <summary>
         /// The name of the scene
@@ -39,7 +39,7 @@ namespace AlmostGoodFoster.Scenes
         /// <summary>
         /// Load the content of the scene
         /// </summary>
-        public void LoadContent()
+        public virtual void LoadContent()
         {
             foreach (var entity in Entities)
             {
@@ -64,7 +64,7 @@ namespace AlmostGoodFoster.Scenes
         /// <summary>
         /// Unload the content of the scene
         /// </summary>
-        public void UnloadContent()
+        public virtual void UnloadContent()
         {
             foreach (var entity in Entities)
             {
@@ -84,7 +84,7 @@ namespace AlmostGoodFoster.Scenes
         /// Handle entity's components inputs
         /// </summary>
         /// <param name="input"></param>
-        public void HandleInputs(Input input)
+        public virtual void HandleInputs(Input input)
         {
             foreach (var entity in Entities)
             {
@@ -101,7 +101,7 @@ namespace AlmostGoodFoster.Scenes
         /// Update the scene
         /// </summary>
         /// <param name="deltaTime"></param>
-        public void Update(float deltaTime)
+        public virtual void Update(float deltaTime)
         {
             foreach (var entity in Entities)
             {
@@ -118,7 +118,7 @@ namespace AlmostGoodFoster.Scenes
         /// Update the scene with a fixed time step
         /// </summary>
         /// <param name="fixedDeltaTime">Time elapsed since the previous frame</param>
-        public void FixedUpdate(float fixedDeltaTime)
+        public virtual void FixedUpdate(float fixedDeltaTime)
         {
             foreach (var entity in Entities)
             {
@@ -135,7 +135,7 @@ namespace AlmostGoodFoster.Scenes
         /// Lately update the scene
         /// </summary>
         /// <param name="deltaTime">Time elapsed since the previous frame</param>
-        public void LateUpdate(float deltaTime)
+        public virtual void LateUpdate(float deltaTime)
         {
             foreach (var entity in Entities)
             {
@@ -153,7 +153,7 @@ namespace AlmostGoodFoster.Scenes
         /// </summary>
         /// <param name="batcher">Batcher used to draw the content of the scene</param>
         /// <param name="deltaTime">Time elapsed since the previous frame</param>
-        public void Render(Batcher batcher, float deltaTime)
+        public virtual void Render(Batcher batcher, float deltaTime)
         {
             foreach (var entity in Entities)
             {

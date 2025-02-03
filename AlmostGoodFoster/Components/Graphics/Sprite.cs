@@ -19,7 +19,6 @@ namespace AlmostGoodFoster.Components.Graphics
         {
 
             Filename = filename;
-            Texture = new Texture(graphicsDevice, new Image($"Assets/{filename}"));
             _graphicsDevice = graphicsDevice;
 #if DEBUG
             _asset = new(Filename);
@@ -41,6 +40,13 @@ namespace AlmostGoodFoster.Components.Graphics
             catch (Exception)
             {
             }
+        }
+
+        public override void LoadContent()
+        {
+            base.LoadContent();
+
+            Texture = new Texture(graphicsDevice, new Image($"Assets/{filename}"));
         }
 
         public override void UnloadContent()

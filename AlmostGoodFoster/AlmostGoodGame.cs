@@ -75,6 +75,11 @@ namespace AlmostGoodFoster
 
             SceneManager.HandleInputs(Input);
 
+            if (Input.Keyboard.Pressed(Keys.S))
+            {
+                Log.Info("Saved");
+            }
+
             // Fixed update
             while (_accumulator >= _fixedDeltaTimeTarget)
             {

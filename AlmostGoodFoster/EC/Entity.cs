@@ -207,7 +207,7 @@ namespace AlmostGoodFoster.EC
         {
             foreach (var component in Components)
             {
-                component?.Render(batcher, deltaTime);
+                component?.DrawGUI(batcher, deltaTime);
             }
         }
 
