@@ -47,7 +47,7 @@ namespace AlmostGoodFoster.Test.Components
             }
 
             Velocity = Velocity.Normalized();
-            Entity.Position += Velocity * Speed * deltaTime;
+            Entity.Position += (Point2)(Velocity * Speed * deltaTime);
         }
     }
 }

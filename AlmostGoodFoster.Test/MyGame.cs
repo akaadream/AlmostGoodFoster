@@ -19,7 +19,7 @@ namespace AlmostGoodFoster.Test
 
         protected override void Startup()
         {       
-            SceneManager.AddScene(new MyScene());
+            SceneManager.AddScene(new MyScene(GraphicsDevice));
             base.Startup();
         }
     }

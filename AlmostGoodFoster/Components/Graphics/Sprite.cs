@@ -7,7 +7,7 @@ namespace AlmostGoodFoster.Components.Graphics
 {
     public class Sprite : Component
     {
-        public Texture Texture { get; set; }
+        public Texture? Texture { get; set; }
         public string Filename { get; set; }
         public float Scale { get; set; } = 1f;
         public bool Watched { get; set; } = false;
@@ -46,7 +46,7 @@ namespace AlmostGoodFoster.Components.Graphics
         {
             base.LoadContent();
 
-            Texture = new Texture(graphicsDevice, new Image($"Assets/{filename}"));
+            Texture = new Texture(_graphicsDevice, new Image($"Assets/{Filename}"));
         }
 
         public override void UnloadContent()
@@ -61,11 +61,12 @@ namespace AlmostGoodFoster.Components.Graphics
 
         public override void Render(Batcher batcher, float deltaTime)
         {
-            if (Entity == null)
+            if (Texture == null)
             {
-                Log.Error($"The component (GUID: {Guid}) is not attached to an entity");
+                Log.Error($"The texture {Filename} is null");
                 return;
             }
+
             batcher.Image(Texture, Entity.Position, Vector2.Zero, Entity.Scale * Scale, 0f, Color.White);
         }
     }

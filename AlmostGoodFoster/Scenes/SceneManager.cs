@@ -76,6 +76,11 @@ namespace AlmostGoodFoster.Scenes
             Scenes?.Clear();
         }
 
+        public void OnResized(int width, int height)
+        {
+            CurrentScene?.OnResized(width, height);
+        }
+
         /// <summary>
         /// Know if a scene using the given name already exists
         /// </summary>
@@ -113,5 +118,19 @@ namespace AlmostGoodFoster.Scenes
         /// <param name="batcher">Batcher used to draw the scene's content</param>
         /// <param name="deltaTime">Time elapsed since the previous frame</param>
         public void Render(Batcher batcher, float deltaTime) => CurrentScene?.Render(batcher, deltaTime);
+
+        /// <summary>
+        /// Right after the rendering of the current scene
+        /// </summary>
+        /// <param name="batcher"></param>
+        /// <param name="deltaTime"></param>
+        public void OnRendered(Batcher batcher, float deltaTime) => CurrentScene?.OnRendered(batcher, deltaTime);
+
+        /// <summary>
+        /// ImGUI rendering
+        /// </summary>
+        /// <param name="batcher"></param>
+        /// <param name="deltaTime"></param>
+        public void ImGUIRender(Batcher batcher, float deltaTime) => CurrentScene?.ImGUIRender(batcher, deltaTime);
     }
 }

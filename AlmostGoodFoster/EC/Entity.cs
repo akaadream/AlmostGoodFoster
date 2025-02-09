@@ -14,7 +14,7 @@ namespace AlmostGoodFoster.EC
         /// <summary>
         /// The position of the entity
         /// </summary>
-        public Vector2 Position { get; set; }
+        public Point2 Position;
 
         /// <summary>
         /// The scale of the entity
@@ -237,9 +237,9 @@ namespace AlmostGoodFoster.EC
                     continue;
                 }
 
-                if (component is T)
+                if (component is T t && t != null)
                 {
-                    return component as T;
+                    return t;
                 }
             }
 
@@ -251,9 +251,9 @@ namespace AlmostGoodFoster.EC
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public List<T?> FindAll<T>(T? instance = null) where T : Component
+        public List<T> FindAll<T>(T? instance = null) where T : Component
         {
-            List<T?> components = [];
+            List<T> components = [];
             foreach (var component in Components)
             {
                 if (instance != null && component == instance)
@@ -261,9 +261,9 @@ namespace AlmostGoodFoster.EC
                     continue;
                 }
 
-                if (component is T)
+                if (component is T t && t != null)
                 {
-                    components.Add(component as T);
+                    components.Add(t);
                 }
             }
             return components;

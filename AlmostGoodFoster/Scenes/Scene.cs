@@ -1,6 +1,6 @@
-﻿using System.Numerics;
-using AlmostGoodFoster.Components;
+﻿using AlmostGoodFoster.Components;
 using AlmostGoodFoster.EC;
+using AlmostGoodFoster.UI;
 using Foster.Framework;
 
 namespace AlmostGoodFoster.Scenes
@@ -36,6 +36,11 @@ namespace AlmostGoodFoster.Scenes
         /// Function called when the engine exit the scene
         /// </summary>
         public delegate void OnSceneExit();
+
+        /// <summary>
+        /// Ui container
+        /// </summary>
+        public UIContainer UIContainer { get; private set; } = new(1280, 720);
 
         /// <summary>
         /// Load the content of the scene
@@ -81,6 +86,11 @@ namespace AlmostGoodFoster.Scenes
             IsLoaded = false;
         }
 
+        public virtual void OnResized(int width, int height)
+        {
+            UIContainer.OnResized(width, height);
+        }
+
         /// <summary>
         /// Handle entity's components inputs
         /// </summary>
@@ -96,6 +106,8 @@ namespace AlmostGoodFoster.Scenes
 
                 entity.HandleInputs(input);
             }
+
+            UIContainer.HandleInputs(input);
         }
 
         /// <summary>
@@ -113,6 +125,8 @@ namespace AlmostGoodFoster.Scenes
 
                 entity.Update(deltaTime);
             }
+
+            UIContainer.Update(deltaTime);
         }
 
         /// <summary>
@@ -174,18 +188,115 @@ namespace AlmostGoodFoster.Scenes
                 }
                 entity.DrawGUI(batcher, deltaTime);
             }
+
+            UIContainer.Render(batcher, deltaTime);
         }
 
+        /// <summary>
+        /// Right after the rendering of the scene
+        /// </summary>
+        /// <param name="batcher"></param>
+        /// <param name="deltaTime"></param>
+        public virtual void OnRendered(Batcher batcher, float deltaTime)
+        {
+            UIContainer.OnRendered(batcher, deltaTime);
+        }
+
+        /// <summary>
+        /// Render the imgui interface
+        /// </summary>
+        /// <param name="batcher"></param>
+        /// <param name="deltaTime"></param>
+        public virtual void ImGUIRender(Batcher batcher, float deltaTime)
+        {
+            
+        }
+
+        /// <summary>
+        /// Add the given entity into the scene
+        /// </summary>
+        /// <param name="entity"></param>
         public void AddEntity(Entity entity)
         {
             Entities.Add(entity);
         }
 
+        /// <summary>
+        /// Create an entity and add it to the scene
+        /// </summary>
+        /// <returns></returns>
         public Entity CreateEntity()
         {
             var entity = new Entity(this);
             AddEntity(entity);
             return entity;
+        }
+
+        /// <summary>
+        /// Find components of the given type except the given instance
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="exception"></param>
+        /// <returns></returns>
+        public List<T> FindAllExcept<T>(T? exception) where T : Component
+        {
+            List<T> components = [];
+
+            foreach (var entity in Entities)
+            {
+                if (entity == null)
+                {
+                    continue;
+                }
+
+                List<T> ts = entity.FindAll(exception);
+                if (ts.Count > 0)
+                {
+                    components.AddRange(ts);
+                }
+            }
+
+            return components;
+        }
+
+        /// <summary>
+        /// Find all the component of the given type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public List<T> FindAll<T>() where T : Component
+        {
+            return FindAllExcept<T>(default);
+        }
+
+        /// <summary>
+        /// Find the first component of the given type except the given instance
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="exception"></param>
+        /// <returns></returns>
+        public T? FindFirstExcept<T>(T? exception) where T : Component
+        {
+            foreach (var entity in Entities)
+            {
+                T? t = entity.Find(exception);
+                if (t != null)
+                {
+                    return t;
+                }
+            }
+
+            return default;
+        }
+
+        /// <summary>
+        /// Find the first intance of the given type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T? FindFirst<T>() where T : Component
+        {
+            return FindFirstExcept<T>(default);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Foster.Framework;
+﻿using System.Diagnostics.CodeAnalysis;
+using Foster.Framework;
 
 namespace AlmostGoodFoster.EC
 {
@@ -12,7 +13,8 @@ namespace AlmostGoodFoster.EC
         /// <summary>
         /// The entity owning the component
         /// </summary>
-        public Entity? Entity { get; internal set; }
+        [NotNull]
+        public required Entity Entity { get; set; }
 
         /// <summary>
         /// Gets or sets the enabled state of the component

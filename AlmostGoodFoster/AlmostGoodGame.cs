@@ -1,4 +1,6 @@
-﻿using AlmostGoodFoster.HotReload;
+﻿using System.Numerics;
+using AlmostGoodFoster.Fonts;
+using AlmostGoodFoster.HotReload;
 using AlmostGoodFoster.Scenes;
 using Foster.Framework;
 
@@ -7,9 +9,14 @@ namespace AlmostGoodFoster
     public class AlmostGoodGame : App
     {
         public Batcher Batcher { get; private set; }
-        public Target Target { get; private set; }
+        public Target? Target { get; private set; }
+
+        protected SceneManager SceneManager { get; private set; }
+        public FontManager FontManager { get; private set; }
 
         public int FPS { get; private set; }
+
+        public RectInt Viewport { get; set; }
 
         #region Fixed time step parameters
 
@@ -25,17 +32,59 @@ namespace AlmostGoodFoster
         private TimeSpan _elapsed;
         private TimeSpan _last;
 
-        public AlmostGoodGame(string name = "Almost Good Game", int width = 1280, int height = 720):
-            base(name, width, height)
+        public static Time CurrentTime { get; private set; }
+
+        public AlmostGoodGame():
+            base(Settings.Title, Settings.Width, Settings.Height)
         {
             // Instanciation
             Batcher = new(GraphicsDevice);
-            Target = new(GraphicsDevice, width, height);
 
+            SceneManager = new();
+            FontManager = new();
 
-            UpdateMode = UpdateMode.UnlockedStep();
             GraphicsDevice.VSync = true;
+            Window.OnResize += OnWindowResized;   
         }
+
+        private void OnWindowResized()
+        {
+            SceneManager.OnResized(Window.WidthInPixels, Window.HeightInPixels);
+        }
+
+        private void LoadSettings()
+        {
+            if (Settings.UseCustomResolution)
+            {
+                Target = new(GraphicsDevice, Settings.ResolutionWidth, Settings.ResolutionHeight);
+                Viewport = (RectInt)new Rect(0, 0, Window.WidthInPixels / Settings.Scale, Window.HeightInPixels / Settings.Scale).Inflate(Settings.Padding);
+            }
+        }
+
+        public void DisableDefaultLogs()
+        {
+            Log.Fn onInfoFn = new(OnInfo);
+            Log.Fn onErrorFn = new(OnInfo);
+            Log.Fn onWarnFn = new(OnInfo);
+            Log.SetCallbacks(onInfoFn, onWarnFn, onErrorFn);
+        }
+
+        private void OnInfo(ReadOnlySpan<char> text)
+        {
+
+        }
+
+        private void OnErrorInfo(ReadOnlySpan<char> text)
+        {
+
+        }
+
+        private void OnWarnInfo(ReadOnlySpan<char> text)
+        {
+
+        }
+
+        protected virtual void RegisterScene(Scene scene) => SceneManager.AddScene(scene);
 
         protected virtual void LoadContent()
         {
@@ -47,6 +96,7 @@ namespace AlmostGoodFoster
         /// </summary>
         protected override void Startup()
         {
+            LoadSettings();
             LoadContent();
 
             // Start everthing
@@ -75,7 +125,12 @@ namespace AlmostGoodFoster
         /// </summary>
         protected override void Update()
         {
+            CurrentTime = Time;
+#if DEBUG
             Window.Title = $"{Name} | FPS: {FPS} - {(GC.GetTotalMemory(false) / 1_048_576f).ToString("F")} MB";
+#else
+            Window.Title = $"{Name}";
+#endif
 
             FPSCalculation();
             UpdateFixedTime();
@@ -136,9 +191,54 @@ namespace AlmostGoodFoster
         {
             Window.Clear(0x897897);
 
-            // Render
-            SceneManager.Render(Batcher, Time.Delta);
+            if (Target != null)
+            {
+                RenderUsingTarget();
+            }
+            else
+            {
+                RenderUsingWindow();
+            }
+        }
+
+        private void RenderUsingTarget()
+        {
+            if (Target == null)
+            {
+                return;
+            }
+
             Batcher.Render(Window);
+            RenderDrawableTarget(Target);
+        }
+
+        private void RenderUsingWindow()
+        {
+            RenderDrawableTarget(Window);
+        }
+
+        private void RenderDrawableTarget(IDrawableTarget target)
+        {
+            SceneManager.Render(Batcher, Time.Delta);
+            Batcher.Render(target);
+            Batcher.Clear();
+
+            if (Target != null)
+            {
+                var size = Viewport.Size;
+                var center = Viewport.Center;
+                var scale = Calc.Min(size.X / (float)Target.Width, size.Y / (float)Target.Height);
+
+                Batcher.PushSampler(new(TextureFilter.Nearest, TextureWrap.Clamp, TextureWrap.Clamp));
+                Batcher.Image(Target, center, Target.Bounds.Size / 2, Vector2.One * scale, 0, Color.White);
+                Batcher.PopSampler();
+                Batcher.Render(Window);
+                Batcher.Clear();
+            }
+
+            SceneManager.OnRendered(Batcher, Time.Delta);
+            Batcher.Render(Window);
+            SceneManager.ImGUIRender(Batcher, Time.Delta);
             Batcher.Clear();
         }
     }

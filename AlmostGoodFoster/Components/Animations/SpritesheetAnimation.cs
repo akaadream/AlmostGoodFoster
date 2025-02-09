@@ -54,13 +54,6 @@ namespace AlmostGoodFoster.Components.Animations
             }
         }
 
-        public static SpritesheetAnimation FromRange(Sprite sprite, float speed, int startX, int startY, int frameWidth, int frameHeight, int count)
-        {
-            var animation = new SpritesheetAnimation(sprite, speed);
-            animation.RegisterFramesRange(startX, startY, frameWidth, frameHeight, count);
-            return animation;
-        }
-
         public void RegisterFrame(RectInt rect)
         {
             Frames.Add(rect);
@@ -87,6 +80,11 @@ namespace AlmostGoodFoster.Components.Animations
 
         public void Render(Batcher batcher, Vector2 position, Vector2 scale)
         {
+            if (Sprite.Texture == null)
+            {
+                return;
+            }
+
             batcher.Image(Sprite.Texture, Frames[FrameIndex], position, Vector2.Zero, scale * Sprite.Scale, 0f, Color.White);
         }
     }
