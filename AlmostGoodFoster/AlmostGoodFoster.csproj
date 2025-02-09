@@ -10,9 +10,6 @@
 		<ProjectReference Include="..\..\Foster\Framework\Foster.Framework.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="Tilemaps\" />
-	</ItemGroup>
-	<ItemGroup>
 	  <PackageReference Include="System.Text.Json" Version="9.0.1" />
 	</ItemGroup>
 </Project>
