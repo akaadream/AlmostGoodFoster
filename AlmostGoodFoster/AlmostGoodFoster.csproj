@@ -19,11 +19,5 @@
 	  <None Update="Assets\Fonts\OpenSans-Bold.ttf">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="Assets\Fonts\OpenSans-Regular.ttf">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="Assets\Fonts\OpenSans-Semibold.ttf">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
 	</ItemGroup>
 </Project>
