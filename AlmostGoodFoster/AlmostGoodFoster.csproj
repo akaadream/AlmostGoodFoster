@@ -12,4 +12,18 @@
 	<ItemGroup>
 	  <PackageReference Include="System.Text.Json" Version="9.0.1" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="UI\Menu\ContextMenu\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Update="Assets\Fonts\OpenSans-Bold.ttf">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Assets\Fonts\OpenSans-Regular.ttf">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Assets\Fonts\OpenSans-Semibold.ttf">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
 </Project>

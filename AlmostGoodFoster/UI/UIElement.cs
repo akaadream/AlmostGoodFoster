@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using AlmostGoodFoster.UI.Containers;
 using Foster.Framework;
 
 namespace AlmostGoodFoster.UI
@@ -18,17 +19,27 @@ namespace AlmostGoodFoster.UI
         /// <summary>
         /// The X position of the UIElement
         /// </summary>
-        public int X { get; set; } = 0;
+        public int X { get; private set; } = 0;
 
         /// <summary>
         /// The Y position of the UIElement
         /// </summary>
-        public int Y { get; set; } = 0;
+        public int Y { get; private set; } = 0;
 
         /// <summary>
         /// The anchor of the element
         /// </summary>
-        public Anchor Anchor { get; set; } = Anchor.TopLeft;
+        public Anchor Anchor
+        {
+            get => _anchor;
+            set
+            {
+                _anchor = value;
+                ComputePosition();
+            }
+        }
+        private Anchor _anchor = Anchor.TopLeft;
+
 
         /// <summary>
         /// Children elements of this element
@@ -38,7 +49,7 @@ namespace AlmostGoodFoster.UI
         /// <summary>
         /// If the element should be auto sized
         /// </summary>
-        public bool AutoSize { get; set; }
+        public bool AutoSize { get; set; } = false;
 
         /// <summary>
         /// The width of the element
@@ -54,6 +65,7 @@ namespace AlmostGoodFoster.UI
                 }
 
                 _width = value;
+                ComputePosition();
             }
         }
         protected int _width;
@@ -72,16 +84,62 @@ namespace AlmostGoodFoster.UI
                 }
 
                 _height = value;
+                ComputePosition();
             }
         }
         protected int _height;
 
-        public int Top { get; set; }
-        public int Bottom { get; set; }
-        public int Left { get; set; }
-        public int Right { get; set; }
+        public int Top
+        {
+            get => _top;
+            set
+            {
+                _top = value;
+                ComputePosition();
+            }
+        }
+        private int _top = 0;
+        public int Bottom
+        {
+            get => _bottom;
+            set
+            {
+                _bottom = value;
+                ComputePosition();
+            }
+        }
+        private int _bottom = 0;
+        public int Left
+        {
+            get => _left;
+            set
+            {
+                _left = value;
+                ComputePosition();
+            }
+        }
+        private int _left = 0;
+        public int Right
+        {
+            get => _right;
+            set
+            {
+                _right = value;
+                ComputePosition();
+            }
+        }
+        private int _right = 0;
 
-        public int Padding { get; set; } = 0;
+        public int Padding
+        {
+            get => _padding;
+            set
+            {
+                _padding = value;
+                ComputePosition();
+            }
+        }
+        private int _padding = 0;
 
         public Color BackgroundColor { get; set; }
         public Color HoverBackgroundColor { get; set; }
@@ -116,11 +174,10 @@ namespace AlmostGoodFoster.UI
 
         private bool MouseHovered(Input input)
         {
-            var position = GetFinalPosition();
-            return input.Mouse.Position.X >= position.X &&
-                input.Mouse.Position.X < position.X + Width &&
-                input.Mouse.Position.Y >= position.Y &&
-                input.Mouse.Position.Y < position.Y + Height;
+            return input.Mouse.Position.X >= X &&
+                input.Mouse.Position.X < X + Width &&
+                input.Mouse.Position.Y >= Y &&
+                input.Mouse.Position.Y < Y + Height;
         }
 
         public virtual void OnResized(int width, int height)
@@ -161,19 +218,24 @@ namespace AlmostGoodFoster.UI
         /// Get the final position
         /// </summary>
         /// <returns></returns>
-        protected Vector2 GetFinalPosition()
+        protected Vector2 ComputePosition()
         {
             switch (Anchor)
             {
                 case Anchor.TopLeft:
+                    X = Left;
+                    Y = Top;
                     break;
                 case Anchor.TopCenter:
                     X = GetCenterX();
+                    Y = Top;
                     break;
                 case Anchor.TopRight:
                     X = GetRightX();
+                    Y = Top;
                     break;
                 case Anchor.MiddleLeft:
+                    X = Left;
                     Y = GetMiddleY();
                     break;
                 case Anchor.MiddleCenter:
@@ -185,6 +247,7 @@ namespace AlmostGoodFoster.UI
                     Y = GetMiddleY();
                     break;
                 case Anchor.BottomLeft:
+                    X = Left;
                     Y = GetBottomY();
                     break;
                 case Anchor.BottomCenter:
@@ -200,12 +263,12 @@ namespace AlmostGoodFoster.UI
             return new Vector2(X, Y);
         }
 
-        private int GetCenterX() => Container.Width / 2 - Width / 2 + X;
+        private int GetCenterX() => Container.Width / 2 - Width / 2 + Left;
 
-        private int GetRightX() => Container.Width - Width - X;
+        private int GetRightX() => Container.Width - Width - Left;
 
-        private int GetMiddleY() => Container.Height / 2 - Height / 2 + Y;
+        private int GetMiddleY() => Container.Height / 2 - Height / 2 + Top;
 
-        private int GetBottomY() => Container.Height - Height - Y;
+        private int GetBottomY() => Container.Height - Height - Top;
     }
 }

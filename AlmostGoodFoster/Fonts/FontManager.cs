@@ -2,11 +2,18 @@
 
 namespace AlmostGoodFoster.Fonts
 {
-    public class FontManager()
+    public static class FontManager
     {
-        public Dictionary<string, Font> Fonts { get; private set; } = [];
+        public static Dictionary<string, Font> Fonts { get; private set; } = [];
+        public static Dictionary<string, SpriteFont> SpriteFonts { get; private set; } = [];
+        public static GraphicsDevice? GraphicsDevice { get; private set; }
 
-        public void Register(string name, Font font)
+        public static void Startup(GraphicsDevice graphicsDevice)
+        {
+            GraphicsDevice = graphicsDevice;
+        }
+
+        public static void Register(string name, Font font)
         {
             // Already exists
             if (Fonts.ContainsKey(name))
@@ -18,15 +25,37 @@ namespace AlmostGoodFoster.Fonts
             Fonts.Add(name, font);
         }
 
-        public Font? Get(string name)
+        public static SpriteFont Register(string name, SpriteFont spriteFont)
+        {
+            // Already exists
+            if (SpriteFonts.ContainsKey(name))
+            {
+                throw new InvalidOperationException($"You cannot register the sprite font {name} because this font already exists in the dictionary!");
+            }
+
+            SpriteFonts.Add(name, spriteFont);
+            return spriteFont;
+        }
+
+        public static SpriteFont Get(string name, int fontSize)
         {
             if (Fonts.TryGetValue(name, out var font))
             {
-                return font;
-            }
+                if (SpriteFonts.TryGetValue($"{name}-{fontSize}", out var spriteFont))
+                {
+                    return spriteFont;
+                }
+                else
+                {
+                    if (GraphicsDevice == null)
+                    {
+                        throw new InvalidOperationException($"Not possible to create a font without the graphics device instance.");
+                    }
 
-            Log.Warning($"The font {name} cannot be found in the fonts dictionary!");
-            return default;
+                    return Register($"{name}-{fontSize}", new SpriteFont(GraphicsDevice, font, fontSize));
+                }
+            }
+            throw new InvalidOperationException($"The font {name} cannot be found in the fonts dictionary!");
         }
     }
 }

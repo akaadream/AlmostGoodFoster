@@ -1,7 +1,10 @@
 ﻿using AlmostGoodFoster.Scenes;
 using Foster.Framework;
-using AlmostGoodFoster.UI;
 using AlmostGoodFoster.Components.Particles;
+using AlmostGoodFoster.UI.Menu.MainMenu;
+using AlmostGoodFoster.UI.Timeline;
+using AlmostGoodFoster.UI.Window;
+using AlmostGoodFoster.Fonts;
 
 namespace AlmostGoodFoster.Test.Scenes
 {
@@ -22,7 +25,7 @@ namespace AlmostGoodFoster.Test.Scenes
             //CreateEntity().Register(new Camera(new RectInt(0, 0, Window.Width, Window.Height)));
             //CreateEntity().Register(new SceneLogger(GraphicsDevice));
 
-            _font = new(graphicsDevice, new Font("Assets/Fonts/Signika-Bold.ttf"), 14);
+            _font = FontManager.Get("default", 12);
 
             var mainMenu = new MainMenu(UIContainer);
             var menuItem = new MenuItem("File", _font, mainMenu, UIContainer);
@@ -36,8 +39,15 @@ namespace AlmostGoodFoster.Test.Scenes
             mainMenu.AddChild(menuItem4);
             mainMenu.AddChild(menuItem5);
 
-            UIContainer.Elements.Add(mainMenu);
+            UIContainer.AddChild(mainMenu);
+            UIContainer.AddChild(new Timeline(_font, UIContainer));
 
+            var window = new SubWindow(800, 400, UIContainer)
+            {
+                Left = 150,
+                Top = 80
+            };
+            UIContainer.AddChild(window);
 
             var texture = new Texture(graphicsDevice, 1, 1);
             var entity = CreateEntity();

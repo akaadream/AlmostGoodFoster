@@ -12,7 +12,6 @@ namespace AlmostGoodFoster
         public Target? Target { get; private set; }
 
         protected SceneManager SceneManager { get; private set; }
-        public FontManager FontManager { get; private set; }
 
         public int FPS { get; private set; }
 
@@ -41,7 +40,6 @@ namespace AlmostGoodFoster
             Batcher = new(GraphicsDevice);
 
             SceneManager = new();
-            FontManager = new();
 
             GraphicsDevice.VSync = true;
             Window.OnResize += OnWindowResized;   
@@ -96,6 +94,9 @@ namespace AlmostGoodFoster
         /// </summary>
         protected override void Startup()
         {
+            FontManager.Startup(GraphicsDevice);
+            FontManager.Register("default", new Font("Assets/Fonts/OpenSans-Bold.ttf"));
+
             LoadSettings();
             LoadContent();
 

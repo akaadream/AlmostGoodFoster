@@ -1,6 +1,6 @@
 ﻿using AlmostGoodFoster.Components;
 using AlmostGoodFoster.EC;
-using AlmostGoodFoster.UI;
+using AlmostGoodFoster.UI.Containers;
 using Foster.Framework;
 
 namespace AlmostGoodFoster.Scenes

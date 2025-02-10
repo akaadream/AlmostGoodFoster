@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using AlmostGoodFoster.UI.Containers;
 using Foster.Framework;
 
 namespace AlmostGoodFoster.UI
@@ -21,8 +22,7 @@ namespace AlmostGoodFoster.UI
         {
             base.Render(batcher, deltaTime);
 
-            Vector2 position = GetFinalPosition();
-            batcher.Text(Font, Text, position, TextColor * Opacity);
+            batcher.Text(Font, Text, new Vector2(X, Y), TextColor * Opacity);
         }
     }
 }

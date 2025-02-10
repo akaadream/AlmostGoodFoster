@@ -1,11 +1,12 @@
 ﻿using System.Numerics;
+using AlmostGoodFoster.UI.Containers;
 using Foster.Framework;
 
-namespace AlmostGoodFoster.UI
+namespace AlmostGoodFoster.UI.Menu.MainMenu
 {
     public class MenuItem : TextUIElement
     {
-        public MenuItem(string text, SpriteFont font, MainMenu mainMenu, UIContainer container): base(text, font, mainMenu, container)
+        public MenuItem(string text, SpriteFont font, MainMenu mainMenu, UIContainer container) : base(text, font, mainMenu, container)
         {
             Padding = 10;
             float fontWidth = font.WidthOf(text);

@@ -1,4 +1,5 @@
-﻿using Foster.Framework;
+﻿using AlmostGoodFoster.UI.Containers;
+using Foster.Framework;
 
 namespace AlmostGoodFoster.UI
 {

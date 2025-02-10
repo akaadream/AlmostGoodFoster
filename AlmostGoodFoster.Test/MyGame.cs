@@ -1,12 +1,5 @@
-﻿using AlmostGoodFoster.Components;
-using AlmostGoodFoster.Components.Animations;
-using AlmostGoodFoster.Components.Graphics;
-using AlmostGoodFoster.EC;
-using AlmostGoodFoster.Scenes;
-using AlmostGoodFoster.Test.Components;
+﻿using AlmostGoodFoster.Scenes;
 using AlmostGoodFoster.Test.Scenes;
-using Foster.Framework;
-using System.Numerics;
 
 namespace AlmostGoodFoster.Test
 {
@@ -17,9 +10,14 @@ namespace AlmostGoodFoster.Test
         {
         }
 
-        protected override void Startup()
-        {       
+        protected override void LoadContent()
+        {
+            base.LoadContent();
             SceneManager.AddScene(new MyScene(GraphicsDevice));
+        }
+
+        protected override void Startup()
+        {
             base.Startup();
         }
     }

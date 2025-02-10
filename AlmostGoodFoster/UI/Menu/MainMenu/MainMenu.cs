@@ -1,13 +1,14 @@
 ﻿using System.Numerics;
+using AlmostGoodFoster.UI.Containers;
 using Foster.Framework;
 
-namespace AlmostGoodFoster.UI
+namespace AlmostGoodFoster.UI.Menu.MainMenu
 {
     public class MainMenu : UIElement
     {
         private int _nextX = 0;
 
-        public MainMenu(UIContainer container): base(null, container)
+        public MainMenu(UIContainer container) : base(null, container)
         {
             _width = container.Width;
             _height = 32;
@@ -23,7 +24,7 @@ namespace AlmostGoodFoster.UI
         {
             if (child is MenuItem menuItem)
             {
-                menuItem.X = _nextX;
+                menuItem.Left = _nextX;
                 _nextX += menuItem.Width;
                 base.AddChild(menuItem);
             }
@@ -31,7 +32,7 @@ namespace AlmostGoodFoster.UI
 
         public override void Render(Batcher batcher, float deltaTime)
         {
-            batcher.Rect(new Rect(GetFinalPosition(), new Vector2(Width, Height)), BackgroundColor);
+            batcher.Rect(new Rect(X, Y, Width, Height), BackgroundColor);
 
             base.Render(batcher, deltaTime);
         }
