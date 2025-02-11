@@ -6,8 +6,6 @@ namespace AlmostGoodFoster.UI.Timeline
 {
     public class Timeline : UIElement
     {
-        SpriteFont _font;
-
         public int MetricLineHeight { get; set; } = 8;
         public Color LineColor = Color.DarkGray;
         public Color ResizeLineColor = new(120, 120, 120, 255);
@@ -21,9 +19,8 @@ namespace AlmostGoodFoster.UI.Timeline
 
         public bool ResizeBorderHovered { get; set; } = false;
 
-        public Timeline(SpriteFont font, UIContainer container) : base(null, container)
+        public Timeline(UIContainer container) : base(null, container)
         {
-            _font = font;
             BackgroundColor = new Color(32, 32, 32, 255);
 
             _width = container.Width;
@@ -79,9 +76,9 @@ namespace AlmostGoodFoster.UI.Timeline
                         title = "Scale";
                         break;
                 }
-                Vector2 titleSize = _font.SizeOf(title);
+                Vector2 titleSize = Font.SizeOf(title);
 
-                batcher.Text(_font, title, new Vector2(Padding * 2, rectY + ItemHeight / 2 - (int)titleSize.Y / 2), Color.White * 0.5f);
+                batcher.Text(Font, title, new Vector2(Padding * 2, rectY + ItemHeight / 2 - (int)titleSize.Y / 2), Color.White * 0.5f);
             }
 
             // Metric
@@ -91,13 +88,13 @@ namespace AlmostGoodFoster.UI.Timeline
 
                 // Text
                 string text = $"{i}";
-                int textWidth = (int)_font.WidthOf(text);
-                int textHeigh = (int)_font.HeightOf(text);
+                int textWidth = (int)Font.WidthOf(text);
+                int textHeigh = (int)Font.HeightOf(text);
 
                 if (i % 5 == 0)
                 {
                     // Big vertical line
-                    batcher.Text(_font, text, new Vector2(x + SidebarWidth - textWidth / 2, Y + Padding), LineColor);
+                    batcher.Text(Font, text, new Vector2(x + SidebarWidth - textWidth / 2, Y + Padding), LineColor);
                     batcher.PushBlend(BlendMode.Add);
                     batcher.Line(new Vector2(x + SidebarWidth, Y + Padding + textHeigh + 5), new Vector2(x + SidebarWidth, Y + Height - Padding), 1f, LineColor * 0.75f);
                     batcher.PopBlend();

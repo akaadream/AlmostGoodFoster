@@ -64,13 +64,41 @@ namespace AlmostGoodFoster.UI.Containers
             foreach (SubWindow window in _windows)
             {
                 window.HandleInputs(input);
+            }
 
-                // TODO: WINDOW FOCUS
-                if (window.IsClicked)
+            if (input.Mouse.LeftPressed)
+            {
+                var newFocusedWindow = GetFirstClicked();
+                if (newFocusedWindow != null)
                 {
-                    
+                    if (FocusedWindow != null)
+                    {
+                        FocusedWindow.IsFocused = false;
+                    }
+
+                    newFocusedWindow.IsFocused = true;
+                    FocusedWindow = newFocusedWindow;
+                    _windows.Remove(FocusedWindow);
+                    _windows.Add(FocusedWindow);
+                }
+                else if (FocusedWindow != null)
+                {
+                    FocusedWindow.IsFocused = false;
+                    FocusedWindow = null;
                 }
             }
+        }
+
+        public SubWindow? GetFirstClicked()
+        {
+            for (int i = _windows.Count - 1; i >= 0; i--)
+            {
+                if (_windows[i].IsClicked)
+                {
+                    return _windows[i];
+                }
+            }
+            return null;
         }
 
         /// <summary>

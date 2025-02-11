@@ -1,13 +1,15 @@
 ﻿using System.Numerics;
+using AlmostGoodFoster.Fonts;
 using AlmostGoodFoster.UI.Containers;
 using Foster.Framework;
 
 namespace AlmostGoodFoster.UI
 {
-    public class Label : TextUIElement
+    public class Label : UIElement
     {
-        public Label(string text, SpriteFont font, UIElement? parent, UIContainer container): base(text, font, parent, container)
+        public Label(string text, UIElement? parent, UIContainer container): base(parent, container)
         {
+            Text = text;
             AutoSize = true;
             ComputeAutoSize();
         }

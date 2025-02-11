@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using AlmostGoodFoster.Fonts;
 using AlmostGoodFoster.UI.Containers;
 using Foster.Framework;
 
@@ -49,7 +50,17 @@ namespace AlmostGoodFoster.UI
         /// <summary>
         /// If the element should be auto sized
         /// </summary>
-        public bool AutoSize { get; set; } = false;
+        public bool AutoSize
+        {
+            get => _autoSize;
+            set
+            {
+                _autoSize = value;
+                ComputeAutoSize();
+                ComputePosition();
+            }
+        }
+        private bool _autoSize = false;
 
         /// <summary>
         /// The width of the element
@@ -145,9 +156,22 @@ namespace AlmostGoodFoster.UI
         public Color HoverBackgroundColor { get; set; }
 
         public float Opacity { get; set; } = 1.0f;
+        public float Radius { get; set; } = 0.0f;
 
         public bool IsHovered = false;
         public bool IsClicked = false;
+
+        #region Text settings
+
+        public string Text { get; set; } = "";
+        public int FontSize { get; set; } = 12;
+
+        protected SpriteFont Font { get; set; } = FontManager.Get("default", 12);
+
+        public Color TextColor { get; set; } = Color.White;
+        public Color HoverTextColor { get; set; } = Color.White;
+
+        #endregion
 
         public virtual void AddChild(UIElement child)
         {

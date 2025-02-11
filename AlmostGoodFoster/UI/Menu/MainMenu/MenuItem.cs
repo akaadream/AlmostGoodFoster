@@ -4,15 +4,16 @@ using Foster.Framework;
 
 namespace AlmostGoodFoster.UI.Menu.MainMenu
 {
-    public class MenuItem : TextUIElement
+    public class MenuItem : UIElement
     {
-        public MenuItem(string text, SpriteFont font, MainMenu mainMenu, UIContainer container) : base(text, font, mainMenu, container)
+        public MenuItem(string text, MainMenu mainMenu, UIContainer container) : base(mainMenu, container)
         {
+            Text = text;
             Padding = 10;
-            float fontWidth = font.WidthOf(text);
-            float fontHeight = font.HeightOf(text);
-            _width = (int)(font.WidthOf(text) + Padding * 2);
-            _height = Math.Max(Math.Clamp((int)(font.HeightOf(text) + Padding * 2), 0, mainMenu.Height), mainMenu.Height);
+            float fontWidth = Font.WidthOf(text);
+            float fontHeight = Font.HeightOf(text);
+            _width = (int)(Font.WidthOf(text) + Padding * 2);
+            _height = Math.Max(Math.Clamp((int)(Font.HeightOf(text) + Padding * 2), 0, mainMenu.Height), mainMenu.Height);
 
             TextColor = new Color(160, 160, 160, 255);
             HoverBackgroundColor = Color.DarkGray;

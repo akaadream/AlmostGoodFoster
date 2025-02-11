@@ -4,15 +4,13 @@ using AlmostGoodFoster.Components.Particles;
 using AlmostGoodFoster.UI.Menu.MainMenu;
 using AlmostGoodFoster.UI.Timeline;
 using AlmostGoodFoster.UI.Window;
-using AlmostGoodFoster.Fonts;
+using AlmostGoodFoster.UI.Controls;
 
 namespace AlmostGoodFoster.Test.Scenes
 {
     internal class MyScene : Scene
     {
         //PathFollow path;
-
-        private SpriteFont _font;
 
         public MyScene(GraphicsDevice graphicsDevice): base("my_scene")
         {
@@ -25,14 +23,12 @@ namespace AlmostGoodFoster.Test.Scenes
             //CreateEntity().Register(new Camera(new RectInt(0, 0, Window.Width, Window.Height)));
             //CreateEntity().Register(new SceneLogger(GraphicsDevice));
 
-            _font = FontManager.Get("default", 12);
-
             var mainMenu = new MainMenu(UIContainer);
-            var menuItem = new MenuItem("File", _font, mainMenu, UIContainer);
-            var menuItem2 = new MenuItem("Edit", _font, mainMenu, UIContainer);
-            var menuItem3 = new MenuItem("Tools", _font, mainMenu, UIContainer);
-            var menuItem4 = new MenuItem("Debug", _font, mainMenu, UIContainer);
-            var menuItem5 = new MenuItem("Windows", _font, mainMenu, UIContainer);
+            var menuItem = new MenuItem("File", mainMenu, UIContainer);
+            var menuItem2 = new MenuItem("Edit", mainMenu, UIContainer);
+            var menuItem3 = new MenuItem("Tools", mainMenu, UIContainer);
+            var menuItem4 = new MenuItem("Debug", mainMenu, UIContainer);
+            var menuItem5 = new MenuItem("Windows", mainMenu, UIContainer);
             mainMenu.AddChild(menuItem);
             mainMenu.AddChild(menuItem2);
             mainMenu.AddChild(menuItem3);
@@ -40,14 +36,37 @@ namespace AlmostGoodFoster.Test.Scenes
             mainMenu.AddChild(menuItem5);
 
             UIContainer.AddChild(mainMenu);
-            UIContainer.AddChild(new Timeline(_font, UIContainer));
+            UIContainer.AddChild(new Timeline(UIContainer));
 
             var window = new SubWindow(800, 400, UIContainer)
             {
                 Left = 150,
                 Top = 80
             };
+
+            var window2 = new SubWindow(500, 300, UIContainer)
+            {
+                Left = 300,
+                Top = 100
+            };
+
+            var window3 = new SubWindow(500, 300, UIContainer)
+            {
+                Left = 450,
+                Top = 80
+            };
+
+            Texture eyeTexture = new(graphicsDevice, new Image("Assets/Icons/opened_eye.png"));
+            var button = new Button(eyeTexture, null, UIContainer)
+            {
+                Left = 10,
+                Top = 42
+            };
+
+            UIContainer.AddChild(button);
             UIContainer.AddChild(window);
+            UIContainer.AddChild(window2);
+            UIContainer.AddChild(window3);
 
             var texture = new Texture(graphicsDevice, 1, 1);
             var entity = CreateEntity();
