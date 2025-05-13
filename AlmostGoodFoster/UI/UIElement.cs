@@ -45,7 +45,7 @@ namespace AlmostGoodFoster.UI
         /// <summary>
         /// Children elements of this element
         /// </summary>
-        private List<UIElement> _children = [];
+        protected List<UIElement> Children = [];
 
         /// <summary>
         /// If the element should be auto sized
@@ -175,12 +175,12 @@ namespace AlmostGoodFoster.UI
 
         public virtual void AddChild(UIElement child)
         {
-            _children.Add(child);
+            Children.Add(child);
         }
 
         public virtual void HandleInputs(Input input)
         {
-            foreach (UIElement child in _children)
+            foreach (UIElement child in Children)
             {
                 child.HandleInputs(input);
             }
@@ -211,7 +211,7 @@ namespace AlmostGoodFoster.UI
 
         public virtual void Update(float deltaTime)
         {
-            foreach (UIElement child in _children)
+            foreach (UIElement child in Children)
             {
                 child.Update(deltaTime);
             }
@@ -219,7 +219,7 @@ namespace AlmostGoodFoster.UI
 
         public virtual void Render(Batcher batcher, float deltaTime)
         {
-            foreach (UIElement child in _children)
+            foreach (UIElement child in Children)
             {
                 child.Render(batcher, deltaTime);
             }
@@ -227,7 +227,7 @@ namespace AlmostGoodFoster.UI
 
         public virtual void OnRendered(Batcher batcher, float deltaTime)
         {
-            foreach (UIElement child in _children)
+            foreach (UIElement child in Children)
             {
                 child.OnRendered(batcher, deltaTime);
             }

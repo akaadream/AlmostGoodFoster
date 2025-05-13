@@ -14,10 +14,15 @@ namespace AlmostGoodFoster.Test
         {
             base.LoadContent();
             SceneManager.AddScene(new MyScene(GraphicsDevice));
+            SceneManager.AddScene(new ClickerScene());
+            SceneManager.AddScene(new InteriousScene());
+
+            SceneManager.SetActive(typeof(InteriousScene).Name);
         }
 
         protected override void Startup()
         {
+            //GraphicsDevice.SamplerCount = 8;
             base.Startup();
         }
     }

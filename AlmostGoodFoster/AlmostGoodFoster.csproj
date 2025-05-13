@@ -14,7 +14,6 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="UI\Menu\ContextMenu\" />
-	  <Folder Include="UI\Layouts\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <None Update="Assets\Fonts\OpenSans-Bold.ttf">

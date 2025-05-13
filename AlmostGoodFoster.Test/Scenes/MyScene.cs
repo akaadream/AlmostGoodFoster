@@ -12,7 +12,7 @@ namespace AlmostGoodFoster.Test.Scenes
     {
         //PathFollow path;
 
-        public MyScene(GraphicsDevice graphicsDevice): base("my_scene")
+        public MyScene(GraphicsDevice graphicsDevice)
         {
             //Entity entity = CreateEntity();
             //Sprite sprite = new(GraphicsDevice, "character.png");

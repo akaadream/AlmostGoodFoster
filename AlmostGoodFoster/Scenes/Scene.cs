@@ -5,22 +5,27 @@ using Foster.Framework;
 
 namespace AlmostGoodFoster.Scenes
 {
-    public class Scene(string name)
+    public class Scene
     {
         /// <summary>
         /// The name of the scene
         /// </summary>
-        public string Name { get; set; } = name;
+        public string Name { get; set; }
 
         /// <summary>
         /// True when the scene is already loaded
         /// </summary>
-        public bool IsLoaded { get; set; } = false;
+        public bool IsLoaded { get; set; }
 
         /// <summary>
         /// The list of entities contained in the scene
         /// </summary>
-        public List<Entity> Entities { get; set; } = [];
+        public List<Entity> Entities { get; set; }
+
+        /// <summary>
+        /// Children scenes contained by the scene
+        /// </summary>
+        public List<Scene> SubScenes { get; set; }
 
         /// <summary>
         /// The main camera of the scene
@@ -41,6 +46,15 @@ namespace AlmostGoodFoster.Scenes
         /// Ui container
         /// </summary>
         public UIContainer UIContainer { get; private set; } = new(1280, 720);
+
+        public Scene()
+        {
+            Name = GetType().Name;
+            IsLoaded = false;
+            Entities = [];
+            SubScenes = [];
+            UIContainer = new(1280, 720);
+        }
 
         /// <summary>
         /// Load the content of the scene
@@ -63,6 +77,11 @@ namespace AlmostGoodFoster.Scenes
                 }
             }
 
+            foreach (var scene in SubScenes)
+            {
+                scene.LoadContent();
+            }
+
             GC.Collect();
             IsLoaded = true;
         }
@@ -80,6 +99,11 @@ namespace AlmostGoodFoster.Scenes
                 }
 
                 entity.UnloadContent();
+            }
+
+            foreach (var scene in SubScenes)
+            {
+                scene.UnloadContent();
             }
 
             GC.Collect();
@@ -107,6 +131,11 @@ namespace AlmostGoodFoster.Scenes
                 entity.HandleInputs(input);
             }
 
+            foreach (var scene in SubScenes)
+            {
+                scene.HandleInputs(input);
+            }
+
             UIContainer.HandleInputs(input);
         }
 
@@ -124,6 +153,11 @@ namespace AlmostGoodFoster.Scenes
                 }
 
                 entity.Update(deltaTime);
+            }
+            
+            foreach (var scene in SubScenes)
+            {
+                scene.Update(deltaTime);
             }
 
             UIContainer.Update(deltaTime);
@@ -144,6 +178,11 @@ namespace AlmostGoodFoster.Scenes
 
                 entity.FixedUpdate(fixedDeltaTime);
             }
+
+            foreach (var scene in SubScenes)
+            {
+                scene.FixedUpdate(fixedDeltaTime);
+            }
         }
 
         /// <summary>
@@ -160,6 +199,11 @@ namespace AlmostGoodFoster.Scenes
                 }
 
                 entity.LateUpdate(deltaTime);
+            }
+
+            foreach (var scene in SubScenes)
+            {
+                scene.LateUpdate(deltaTime);
             }
         }
 
@@ -187,6 +231,11 @@ namespace AlmostGoodFoster.Scenes
                     batcher.PopMatrix();
                 }
                 entity.DrawGUI(batcher, deltaTime);
+            }
+
+            foreach (var scene in SubScenes)
+            {
+                scene.Render(batcher, deltaTime);
             }
 
             UIContainer.Render(batcher, deltaTime);
